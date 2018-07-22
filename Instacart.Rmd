@@ -1,0 +1,57 @@
+---
+title: "Instacart"
+author: "Napas"
+date: "22.07.2018"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+#Import
+
+```{r}
+sapply(c("tidyverse","purrr","rmarkdown","knitr"),require, character.only = TRUE)
+```
+
+#Data Processing
+
+##Load Data
+
+```{r}
+setwd("E:\\Project\\Instacart")
+aisles <- read.csv("aisles.csv")
+departments <- read.csv("departments.csv")
+orders <- read.csv("orders.csv")
+products <- read.csv("products.csv", stringsAsFactors = FALSE)
+```
+
+##Data Structure
+
+```{r}
+str(aisles)
+str(departments)
+str(orders)
+str(products)
+```
+
+##Clean Data
+
+```{r}
+products <- left_join(products, aisles, by="aisle_id")
+products <- left_join(products, departments, by="department_id")
+```
+
+
+#Plot
+
+##Number of products in each category
+
+```{r}
+products %>% 
+  group_by(department) %>%
+  summarise(number=n()) %>%
+  ggplot(aes(x=department,y=number)) + geom_bar(stat="identity") + coord_flip()
+```
+
